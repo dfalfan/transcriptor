@@ -1,614 +1,468 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Transcriptor</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="{{ url_for('static', filename='items.js') }}"></script>
-    <script src="{{ url_for('static', filename='options.js') }}"></script>
-    <script src="{{ url_for('static', filename='headers.js') }}"></script>
-    <script src="{{ url_for('static', filename='templates.js') }}"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Exo+2:400,700"
-      rel="stylesheet"
-    />
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <script src="{{ url_for('static', filename='rec.js') }}"></script>
-  </head>
 
-  <body>
-    <div class="header">
-      <div id="info-box" style="display: none">
-        <p id="info-admision">
-          Admisión:
-          <b><span id="info-admision-numero"></span></b>
-        </p>
-        <p id="info-medico">
-          Médico:
-          <b><span id="info-medico-nombre"></span></b>
-        </p>
+<head>
+  <title>Transcriptor</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="{{ url_for('static', filename='items.js') }}"></script>
+  <script src="{{ url_for('static', filename='options.js') }}"></script>
+  <script src="{{ url_for('static', filename='headers.js') }}"></script>
+  <script src="{{ url_for('static', filename='templates.js') }}"></script>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+  <link href="https://fonts.googleapis.com/css?family=Exo+2:400,700" rel="stylesheet" />
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <script src="{{ url_for('static', filename='rec.js') }}"></script>
+</head>
+
+<body>
+  <div class="header">
+    <div id="info-box" style="display: none">
+      <p id="info-admision">
+        Admisión:
+        <b><span id="info-admision-numero"></span></b>
+      </p>
+      <p id="info-medico">
+        Médico:
+        <b><span id="info-medico-nombre"></span></b>
+      </p>
+    </div>
+  </div>
+  <div class="formulario">
+    <div class="white-box"></div>
+    <form action="/save-selected-data" method="post">
+      <input type="hidden" name="edited_filtered_text" id="edited_filtered_text" />
+      <input type="hidden" name="transcription_text" value="{{ transcription }}" />
+      <input type="hidden" name="audio_filename" value="{{ audio_filename }}" />
+      <div class="user-fields">
+        <span class="required-indicator"></span>
+        <select id="doctor" name="doctor" placeholder="Medico" class="required-field"
+          style="width: 450px; margin-left: -10px; font-size: large" required="required" onchange="compareDoctorName()">
+          <option value="" disabled="disabled" selected="selected">
+            Medico
+          </option>
+        </select>
+        <div class="input-field">
+          <input type="text" id="fecha" name="fecha" placeholder="Fecha" class="required-field"
+            style="width: 450px; font-size: large" required="required" />
+          <label for="fecha">Fecha</label>
+        </div>
       </div>
-    </div>
-    <div class="formulario">
-      <div class="white-box"></div>
-      <form action="/save-selected-data" method="post">
-        <input
-          type="hidden"
-          name="edited_filtered_text"
-          id="edited_filtered_text"
-        />
-        <input
-          type="hidden"
-          name="transcription_text"
-          value="{{ transcription }}"
-        />
-        <input
-          type="hidden"
-          name="audio_filename"
-          value="{{ audio_filename }}"
-        />
-        <div class="user-fields">
-          <span class="required-indicator"></span>
-          <select
-            id="doctor"
-            name="doctor"
-            placeholder="Medico"
-            class="required-field"
-            style="width: 450px; margin-left: -10px; font-size: large"
-            required="required"
-            onchange="compareDoctorName()"
-          >
-            <option value="" disabled="disabled" selected="selected">
-              Medico
-            </option>
-          </select>
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo2" />
+      <div class="form-columns">
+        <!-- Columna 1 -->
+        <div class="usercolumna1">
           <div class="input-field">
-            <input
-              type="text"
-              id="fecha"
-              name="fecha"
-              placeholder="Fecha"
-              class="required-field"
-              style="width: 450px; font-size: large"
-              required="required"
-            />
-            <label for="fecha">Fecha</label>
+            <select id="lista1" name="lista1" size="15">
+              <!-- Las admisiones se cargarán aquí -->
+            </select>
           </div>
         </div>
-        <img src="{{ url_for('static', filename='logo.png') }}" class="logo2" />
-        <div class="form-columns">
-          <!-- Columna 1 -->
-          <div class="usercolumna1">
-            <div class="input-field">
-              <select id="lista1" name="lista1" size="15">
-                <!-- Las admisiones se cargarán aquí -->
-              </select>
-            </div>
-          </div>
-          <!-- Columna 2 -->
-          <div class="usercolumna2">
-            <div class="input-field">
-              <select id="lista2" name="lista2" size="15">
-                <!-- Los detalles se cargarán aquí -->
-              </select>
-            </div>
-          </div>
-          <!--Columna 3-->
-          <div class="usercolumna3">
-            <div id="info-seleccion">
-              <p>
-                Nombre:
-                <span id="nombre"></span>
-              </p>
-              <p>
-                Edad:
-                <span id="edad"></span>
-              </p>
-              <p>
-                Cedula:
-                <span id="cedula"></span>
-              </p>
-              <p id="label_estudio" style="display: none">
-                Estudio:
-                <span id="estudio"></span>
-              </p>
-              <hr id="divider" style="display: none" />
-              <p id="label_estudio_informado" style="display: none">
-                Estudio Informado:
-                <span id="estudio_informado"></span>
-              </p>
-              <p id="label_medico_informante" style="display: none">
-                Médico Informante:
-                <span id="medico_informante"></span>
-              </p>
-              <p id="label_fecha_informado" style="display: none">
-                Fecha Informado:
-                <span id="fecha_informado"></span>
-              </p>
-              <p id="label_estudio_link" style="display: none">
-                Estudio:
-                <a id="estudio_link" href="#">Abrir estudio</a>
-              </p>
-            </div>
-            <input
-              type="submit"
-              value="Siguiente"
-              id="next-button"
-              style="left: 75px; position: absolute; top: 332px"
-            />
+        <!-- Columna 2 -->
+        <div class="usercolumna2">
+          <div class="input-field">
+            <select id="lista2" name="lista2" size="15">
+              <!-- Los detalles se cargarán aquí -->
+            </select>
           </div>
         </div>
-      </form>
-    </div>
-    <div class="containerprincipal" style="display: none">
-      <div class="left-column">
-        <a href="#" id="back-button" onclick="refreshPage()">
-          <i class="fas fa-arrow-left"></i>
-        </a>
-        <script>
-          function refreshPage() {
-            window.location.href = "https://transcriptor.prevaler.com/";
-            window.location.reload(true); // Forzar la recarga desde el servidor
-          }
-        </script>
-        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" />
-        <div class="first-row">
-          <div class="select-template">
-            <div class="select-box">
-              <select
-                id="encabezado-select"
-                name="encabezado"
-                style="width: 320px; top: 0px; left: 48px"
-              >
-                <option value="" disabled selected>Seleccione</option>
+        <!--Columna 3-->
+        <div class="usercolumna3">
+          <div id="info-seleccion">
+            <p>
+              Nombre:
+              <span id="nombre"></span>
+            </p>
+            <p>
+              Edad:
+              <span id="edad"></span>
+            </p>
+            <p>
+              Cedula:
+              <span id="cedula"></span>
+            </p>
+            <p id="label_estudio" style="display: none">
+              Estudio:
+              <span id="estudio"></span>
+            </p>
+            <hr id="divider" style="display: none" />
+            <p id="label_estudio_informado" style="display: none">
+              Estudio Informado:
+              <span id="estudio_informado"></span>
+            </p>
+            <p id="label_medico_informante" style="display: none">
+              Médico Informante:
+              <span id="medico_informante"></span>
+            </p>
+            <p id="label_fecha_informado" style="display: none">
+              Fecha Informado:
+              <span id="fecha_informado"></span>
+            </p>
+            <p id="label_estudio_link" style="display: none">
+              Estudio:
+              <a id="estudio_link" href="#">Abrir estudio</a>
+            </p>
+          </div>
+          <input type="submit" value="Siguiente" id="next-button" style="left: 75px; position: absolute; top: 332px" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="containerprincipal" style="display: none">
+    <div class="left-column">
+      <a href="#" id="back-button" onclick="refreshPage()">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <script>
+        function refreshPage() {
+          window.location.href = "https://transcriptor.prevaler.com/";
+          window.location.reload(true); // Forzar la recarga desde el servidor
+        }
+      </script>
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo" />
+      <div class="first-row">
+        <div class="select-template">
+          <div class="select-box">
+            <select id="encabezado-select" name="encabezado" style="width: 320px; top: 0px; left: 48px">
+              <option value="" disabled selected>Seleccione</option>
 
-                <!-- Opciones del encabezado aquí -->
-              </select>
-              <label
-                for="encabezado-select"
-                style="left: -357px; position: relative; font-size: small"
-              >
-                Encabezado:
-              </label>
-            </div>
-            <div class="select-box">
-              <select
-                id="plantilla-select"
-                name="plantilla"
-                style="top: 7px; width: 320px; left: 48px"
-              >
-                <option value="" disabled="" selected="">Seleccione</option>
-                <!-- Opciones de plantilla aquí -->
-              </select>
-              <label
-                for="plantilla-select"
-                style="left: -357px; position: relative; font-size: small"
-              >
-                Plantilla:
-              </label>
-            </div>
+              <!-- Opciones del encabezado aquí -->
+            </select>
+            <label for="encabezado-select" style="left: -357px; position: relative; font-size: small">
+              Encabezado:
+            </label>
+          </div>
+          <div class="select-box">
+            <select id="plantilla-select" name="plantilla" style="top: 7px; width: 320px; left: 48px">
+              <option value="" disabled="" selected="">Seleccione</option>
+              <!-- Opciones de plantilla aquí -->
+            </select>
+            <label for="plantilla-select" style="left: -357px; position: relative; font-size: small">
+              Plantilla:
+            </label>
           </div>
         </div>
-        <div class="second-row">
-          <div class="audiodiv">
-            <div id="audio-recorder-container" style="text-align: center">
-              <div id="record-buttons" style="display: -webkit-inline-box">
-                <button id="pause-recording" disabled>
-                  <i
-                    class="fas fa-pause"
-                    style="top: -2px; position: relative"
-                  ></i>
-                </button>
-                <div id="recorder">
-                  <img
-                    id="record"
-                    src="{{ url_for('static', filename='record.png') }}"
-                  />
-                  <img
-                    id="arrow"
-                    src="{{ url_for('static', filename='arrow.png') }}"
-                  />
-                </div>
-                <div id="timer" style="display: none">
-                  <span id="minutes">00</span>
-                  <br />
-                  <span id="seconds">00</span>
-                </div>
-                <button id="save-recording" disabled style="display: none">
-                  Guardar Grabación
-                </button>
+      </div>
+      <div class="second-row">
+        <div class="audiodiv">
+          <div id="audio-recorder-container" style="text-align: center">
+            <div id="record-buttons" style="display: -webkit-inline-box">
+              <button id="pause-recording" disabled>
+                <i class="fas fa-pause" style="top: -2px; position: relative"></i>
+              </button>
+              <div id="recorder">
+                <img id="record" src="{{ url_for('static', filename='record.png') }}" />
+                <img id="arrow" src="{{ url_for('static', filename='arrow.png') }}" />
               </div>
-              <canvas id="visualizer"></canvas>
-              <div id="reproductor">
-                <audio
-                  id="audio-preview"
-                  controls
-                  style="margin-top: 10px; position: relative; z-index: 1"
-                ></audio>
+              <div id="timer" style="display: none">
+                <span id="minutes">00</span>
+                <br />
+                <span id="seconds">00</span>
               </div>
-              <div id="expand-upload-container">
-                <i id="expand-upload" class="fas fa-chevron-circle-down"></i>
-              </div>
-              <form
-                action="/transcribe"
-                method="post"
-                enctype="multipart/form-data"
-                id="transcription-form"
-                class="transcription-form"
-              >
-                <label
-                  for="manual-audio-upload"
-                  id="upload-label"
-                  style="display: none"
-                >
-                  Cargar audio
-                </label>
-                <input
-                  type="file"
-                  name="audio_file"
-                  accept="audio/*"
-                  id="manual-audio-upload"
-                  style="display: none"
-                />
-                <input
-                  type="submit"
-                  value="Transcribir"
-                  id="transcribe-button"
-                  display="none"
-                  disabled=""
-                  style="
+              <button id="save-recording" disabled style="display: none">
+                Guardar Grabación
+              </button>
+            </div>
+            <canvas id="visualizer"></canvas>
+            <div id="reproductor">
+              <audio id="audio-preview" controls style="margin-top: 10px; position: relative; z-index: 1"></audio>
+            </div>
+            <div id="expand-upload-container">
+              <i id="expand-upload" class="fas fa-chevron-circle-down"></i>
+            </div>
+            <form action="/transcribe" method="post" enctype="multipart/form-data" id="transcription-form"
+              class="transcription-form">
+              <label for="manual-audio-upload" id="upload-label" style="display: none">
+                Cargar audio
+              </label>
+              <input type="file" name="audio_file" accept="audio/*" id="manual-audio-upload" style="display: none" />
+              <input type="submit" value="Transcribir" id="transcribe-button" display="none" disabled="" style="
                     left: 28px;
                     width: 317px;
                     margin-bottom: 0px;
                     font-size: large;
-                  "
-                />
-                <input
-                  type="button"
-                  value="Corregir"
-                  id="correct-button"
-                  class="correct-button"
-                  style="display: none; font-size: large"
-                />
-              </form>
-            </div>
+                  " />
+              <input type="button" value="Corregir" id="correct-button" class="correct-button"
+                style="display: none; font-size: large" />
+            </form>
           </div>
-        </div>
-        <div class="third-row">
-          <div class="pagination"></div>
         </div>
       </div>
-      <div class="right-column">
-        <div id="page1" class="page-content">
-          <div id="info-box-dos">
-            <p id="info-paciente">
-              Paciente:
-              <b><span id="info-paciente-nombre"></span></b>
-            </p>
-            <p id="info-tipo-estudio">
-              Tipo de Estudio:
-              <b><span id="info-tipo-estudio-nombre"></span></b>
-            </p>
-          </div>
-
-          <div
-            id="transcription-header-container"
-            <div
-            id="transcription-header"
-          >
-            <div id="transcription-header-content">
-              <div id="transcription-header-text">
-                <textarea id="header_text" name="header_text"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <div id="transcription-container">
-            <div class="transcription-content">
-              <div class="player" id="textarea-container">
-                <textarea id="filtered_text" name="filtered_text"></textarea>
-                <div class="input-field">
-                  <input
-                    type="text"
-                    id="refiere"
-                    name="refiere"
-                    placeholder="Refiere"
-                    style="margin-top: 40px; margin-left: 55px"
-                  />
-                </div>
-                <div id="loading-container" style="display: none">
-                  <img
-                    src="{{ url_for('static', filename='elipsis.svg') }}"
-                    id="loading-gif"
-                    alt="Loading..."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="page2" class="page-content" style="display: none">
-          <!-- Contenido de la página 2 -->
-          <div class="dropzone-row">
-            <div class="dropzone" id="dropzone1">
-              <button id="paste-button1" class="paste-button">
-                Pegar imagen
-              </button>
-            </div>
-            <div class="dropzone" id="dropzone2">
-              <button id="paste-button2" class="paste-button">
-                Pegar imagen
-              </button>
-            </div>
-          </div>
-          <div class="dropzone-row">
-            <div class="dropzone" id="dropzone3">
-              <button id="paste-button3" class="paste-button">
-                Pegar imagen
-              </button>
-            </div>
-            <div class="dropzone" id="dropzone4">
-              <button id="paste-button4" class="paste-button">
-                Pegar imagen
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div id="page3" class="page-content" style="display: none">
-          <!-- Contenido de la página 3 -->
-        </div>
-        <div id="page4" class="page-content" style="display: none">
-          <!-- Contenido de la página 4 -->
-        </div>
-        <div id="pagecheck" class="page-content" style="display: none">
-          <form action="/download" method="post">
-            <input
-              type="hidden"
-              class="topdf"
-              id="edited_filtered_textxx"
-              name="edited_filtered_text"
-            />
-            <input
-              type="hidden"
-              class="topdf"
-              id="tipo_estudioxx"
-              name="tipo_estudio"
-            />
-            <!-- Incluye los otros campos aquí -->
-            <input
-              type="hidden"
-              class="topdf"
-              id="header_textxx"
-              name="header_text"
-            />
-            <input type="hidden" class="topdf" id="refierexx" name="refiere" />
-            <input
-              type="hidden"
-              class="topdf"
-              id="pacientexx"
-              name="paciente"
-            />
-            <input type="hidden" class="topdf" id="cedulaxx" name="cedula" />
-            <input type="hidden" class="topdf" id="edadxx" name="edad" />
-            <input type="hidden" class="topdf" id="fechaxx" name="fecha" />
-            <input
-              type="hidden"
-              class="topdf"
-              id="admisionxx"
-              name="admision"
-            />
-            <input type="hidden" class="topdf" id="doctorxx" name="doctor" />
-            <div id="loadingpdf" style="display: none; margin-top: 30%">
-              <img
-                src="{{ url_for('static', filename='elipsis.svg') }}"
-                alt="Cargando..."
-              />
-            </div>
-            <button id="generatePdfButton" type="submit" style="display: none">
-              Generar PDF
-            </button>
-            <embed src="" type="application/pdf" width="250%" height="400px" />
-            <input type="hidden" id="pdf_filename" name="pdf_filename" />
-            <button
-              id="approveStudyButton"
-              type="button"
-              onclick="approveStudy()"
-            >
-              Aprobar Estudio
-            </button>
-            <script>
-              function approveStudy() {
-                var pdf_filename =
-                  document.getElementById("pdf_filename").value;
-                console.log("Nombre del archivo PDF: " + pdf_filename); // Agregar registro de consola
-
-                // Preparar los datos para enviar
-                var edited_filtered_text = $("#edited_filtered_textxx").val();
-                var header_text = $("#header_textxx").val();
-
-                console.log(
-                  "Valor de edited_filtered_text antes de enviar: ",
-                  edited_filtered_text
-                );
-                console.log(
-                  "Valor de header_text antes de enviar: ",
-                  header_text
-                );
-
-                var dataToSend = {
-                  pdf_filename: pdf_filename,
-                  edited_filtered_text: edited_filtered_text,
-                  header_text: header_text,
-                };
-                $.post("/approve_study", dataToSend, function (response) {
-                  if (
-                    response === "Estudio aprobado y PDF copiado con éxito."
-                  ) {
-                    alert("Estudio aprobado y PDF copiado con éxito.");
-                    window.location.href = "https://transcriptor.prevaler.com/"; // Redirigir a la URL especificada
-
-                    // Llamar a clear_session después de que el estudio ha sido aprobado
-                    $.post("/clear_session", function (clearResponse) {
-                      console.log(
-                        "Respuesta de clear_session: ",
-                        clearResponse
-                      );
-                    });
-                  } else {
-                    // Maneja el error
-                    console.error("Error al aprobar el estudio: ", response);
-                  }
-                });
-              }
-            </script>
-          </form>
-        </div>
+      <div class="third-row">
+        <div class="pagination"></div>
       </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-    <script>
-      function showLoadingGif() {
-        $("#textarea-container").addClass("loading");
-        $("#loading-container").show();
-        $("#filtered_text").prop("disabled", true);
-      }
+    <div class="right-column">
+      <div id="page1" class="page-content">
+        <div id="info-box-dos">
+          <p id="info-paciente">
+            Paciente:
+            <b><span id="info-paciente-nombre"></span></b>
+          </p>
+          <p id="info-tipo-estudio">
+            Tipo de Estudio:
+            <b><span id="info-tipo-estudio-nombre"></span></b>
+          </p>
+        </div>
 
-      function hideLoadingGif() {
-        $("#textarea-container").removeClass("loading");
-        $("#loading-container").hide();
-        $("#filtered_text").prop("disabled", false);
-      }
+        <div id="transcription-header-container" <div id="transcription-header">
+          <div id="transcription-header-content">
+            <div id="transcription-header-text">
+              <textarea id="header_text" name="header_text"></textarea>
+            </div>
+          </div>
+        </div>
 
-      // Actualiza el estado del botón de transcripción
-      $("#transcription-form").on("submit", function (event) {
-        event.preventDefault();
+        <div id="transcription-container">
+          <div class="transcription-content">
+            <div class="player" id="textarea-container">
+              <textarea id="filtered_text" name="filtered_text"></textarea>
+              <div class="input-field">
+                <input type="text" id="refiere" name="refiere" placeholder="Refiere"
+                  style="margin-top: 40px; margin-left: 55px" />
+              </div>
+              <div id="loading-container" style="display: none">
+                <img src="{{ url_for('static', filename='elipsis.svg') }}" id="loading-gif" alt="Loading..." />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="page2" class="page-content" style="display: none">
+        <!-- Contenido de la página 2 -->
+        <div class="dropzone-row">
+          <div class="dropzone" id="dropzone1">
+            <button id="paste-button1" class="paste-button">
+              Pegar imagen
+            </button>
+          </div>
+          <div class="dropzone" id="dropzone2">
+            <button id="paste-button2" class="paste-button">
+              Pegar imagen
+            </button>
+          </div>
+        </div>
+        <div class="dropzone-row">
+          <div class="dropzone" id="dropzone3">
+            <button id="paste-button3" class="paste-button">
+              Pegar imagen
+            </button>
+          </div>
+          <div class="dropzone" id="dropzone4">
+            <button id="paste-button4" class="paste-button">
+              Pegar imagen
+            </button>
+          </div>
+        </div>
+      </div>
 
-        // Mostrar el GIF de carga y deshabilitar el textarea
-        showLoadingGif();
+      <div id="page3" class="page-content" style="display: none">
+        <!-- Contenido de la página 3 -->
+      </div>
+      <div id="page4" class="page-content" style="display: none">
+        <!-- Contenido de la página 4 -->
+      </div>
+      <div id="pagecheck" class="page-content" style="display: none">
+        <form action="/download" method="post">
+          <input type="hidden" class="topdf" id="edited_filtered_textxx" name="edited_filtered_text" />
+          <input type="hidden" class="topdf" id="tipo_estudioxx" name="tipo_estudio" />
+          <!-- Incluye los otros campos aquí -->
+          <input type="hidden" class="topdf" id="header_textxx" name="header_text" />
+          <input type="hidden" class="topdf" id="refierexx" name="refiere" />
+          <input type="hidden" class="topdf" id="pacientexx" name="paciente" />
+          <input type="hidden" class="topdf" id="cedulaxx" name="cedula" />
+          <input type="hidden" class="topdf" id="edadxx" name="edad" />
+          <input type="hidden" class="topdf" id="fechaxx" name="fecha" />
+          <input type="hidden" class="topdf" id="admisionxx" name="admision" />
+          <input type="hidden" class="topdf" id="doctorxx" name="doctor" />
+          <div id="loadingpdf" style="display: none; margin-top: 30%">
+            <img src="{{ url_for('static', filename='elipsis.svg') }}" alt="Cargando..." />
+          </div>
+          <button id="generatePdfButton" type="submit" style="display: none">
+            Generar PDF
+          </button>
+          <embed src="" type="application/pdf" width="250%" height="400px" />
+          <input type="hidden" id="pdf_filename" name="pdf_filename" />
+          <button id="approveStudyButton" type="button" onclick="approveStudy()">
+            Aprobar Estudio
+          </button>
+          <script>
+            function approveStudy() {
+              var pdf_filename =
+                document.getElementById("pdf_filename").value;
+              console.log("Nombre del archivo PDF: " + pdf_filename); // Agregar registro de consola
 
-        $.ajax({
-          url: "/transcribe",
-          type: "POST",
-          data: new FormData(this),
-          processData: false,
-          contentType: false,
-          success: function (data) {
-            // Ocultar el GIF de carga y habilitar el textarea
-            hideLoadingGif();
+              // Preparar los datos para enviar
+              var edited_filtered_text = $("#edited_filtered_textxx").val();
+              var header_text = $("#header_textxx").val();
 
-            // Escapar los caracteres de control en la cadena de texto
-            var escaped_text = data.filtered_text
-              .replace(/[\n\r]/g, "\\n")
-              .replace(/[\"]/g, '\\"');
-            // Interpretar las secuencias de escape en la cadena de texto
-            var filtered_text = JSON.parse('"' + escaped_text + '"');
+              console.log(
+                "Valor de edited_filtered_text antes de enviar: ",
+                edited_filtered_text
+              );
+              console.log(
+                "Valor de header_text antes de enviar: ",
+                header_text
+              );
 
-            // Insertar el texto de la transcripción en la posición actual del cursor
-            var textarea = $("#filtered_text")[0];
-            var cursorPos = textarea.selectionStart;
-            var textBefore = textarea.value.substring(0, cursorPos);
-            var textAfter = textarea.value.substring(
-              cursorPos,
-              textarea.value.length
-            );
-            textarea.value = textBefore + filtered_text + textAfter;
+              var dataToSend = {
+                pdf_filename: pdf_filename,
+                edited_filtered_text: edited_filtered_text,
+                header_text: header_text,
+              };
+              $.post("/approve_study", dataToSend, function (response) {
+                if (
+                  response === "Estudio aprobado y PDF copiado con éxito."
+                ) {
+                  alert("Estudio aprobado y PDF copiado con éxito.");
+                  window.location.href = "https://transcriptor.prevaler.com/"; // Redirigir a la URL especificada
 
-            // Llama a la función updateTranscribeButton
-            updateTranscribeButton();
-            updateCorrectButton();
-            $("#expand-upload-container").hide();
-          },
-          error: function () {
-            // También es buena idea ocultar el GIF de carga y habilitar el textarea en caso de error
-            hideLoadingGif();
-          },
-        });
+                  // Llamar a clear_session después de que el estudio ha sido aprobado
+                  $.post("/clear_session", function (clearResponse) {
+                    console.log(
+                      "Respuesta de clear_session: ",
+                      clearResponse
+                    );
+                  });
+                } else {
+                  // Maneja el error
+                  console.error("Error al aprobar el estudio: ", response);
+                }
+              });
+            }
+          </script>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  <script>
+    function showLoadingGif() {
+      $("#textarea-container").addClass("loading");
+      $("#loading-container").show();
+      $("#filtered_text").prop("disabled", true);
+    }
+
+    function hideLoadingGif() {
+      $("#textarea-container").removeClass("loading");
+      $("#loading-container").hide();
+      $("#filtered_text").prop("disabled", false);
+    }
+
+    // Actualiza el estado del botón de transcripción
+    $("#transcription-form").on("submit", function (event) {
+      event.preventDefault();
+
+      // Mostrar el GIF de carga y deshabilitar el textarea
+      showLoadingGif();
+
+      $.ajax({
+        url: "/transcribe",
+        type: "POST",
+        data: new FormData(this),
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          // Ocultar el GIF de carga y habilitar el textarea
+          hideLoadingGif();
+
+          // Escapar los caracteres de control en la cadena de texto
+          var escaped_text = data.filtered_text
+            .replace(/[\n\r]/g, "\\n")
+            .replace(/[\"]/g, '\\"');
+          // Interpretar las secuencias de escape en la cadena de texto
+          var filtered_text = JSON.parse('"' + escaped_text + '"');
+
+          // Insertar el texto de la transcripción en la posición actual del cursor
+          var textarea = $("#filtered_text")[0];
+          var cursorPos = textarea.selectionStart;
+          var textBefore = textarea.value.substring(0, cursorPos);
+          var textAfter = textarea.value.substring(
+            cursorPos,
+            textarea.value.length
+          );
+          textarea.value = textBefore + filtered_text + textAfter;
+
+          // Llama a la función updateTranscribeButton
+          updateTranscribeButton();
+          updateCorrectButton();
+          $("#expand-upload-container").hide();
+        },
+        error: function () {
+          // También es buena idea ocultar el GIF de carga y habilitar el textarea en caso de error
+          hideLoadingGif();
+        },
       });
-    </script>
-    <script>
-      var fullText =
-        '{{ filtered_text|replace("\n", "\\n")|replace("\'", "\\\'") }}'; // Texto completo que se mostrará en el textarea
-      function transcribeText() {
-        var textarea = document.getElementById("filtered_text");
-        textarea.value = ""; // Limpiar el contenido actual del textarea
-        var index = 0;
-        var typingSpeed = 10; // Velocidad de carga de caracteres (en milisegundos)
-        function typeNextChar() {
-          textarea.value += fullText.charAt(index);
-          index++;
-          if (index < fullText.length) {
-            setTimeout(typeNextChar, typingSpeed);
-          }
+    });
+  </script>
+  <script>
+    var fullText =
+      '{{ filtered_text|replace("\n", "\\n")|replace("\'", "\\\'") }}'; // Texto completo que se mostrará en el textarea
+    function transcribeText() {
+      var textarea = document.getElementById("filtered_text");
+      textarea.value = ""; // Limpiar el contenido actual del textarea
+      var index = 0;
+      var typingSpeed = 10; // Velocidad de carga de caracteres (en milisegundos)
+      function typeNextChar() {
+        textarea.value += fullText.charAt(index);
+        index++;
+        if (index < fullText.length) {
+          setTimeout(typeNextChar, typingSpeed);
         }
-        typeNextChar();
       }
-      window.onload = function () {
-        transcribeText();
-      };
-    </script>
+      typeNextChar();
+    }
+    window.onload = function () {
+      transcribeText();
+    };
+  </script>
 
-    <footer>
-      <p>
-        <span id="currentYear"></span>
-        ® Prevaler C.A.
-      </p>
-    </footer>
-    <script>
-      var currentYearElement = document.getElementById("currentYear"),
-        currentYear = new Date().getFullYear();
-      currentYearElement.textContent = currentYear;
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const players = Array.from(document.querySelectorAll(".js-plyr")).map(
-          (p) => new Plyr(p)
-        );
-      });
-    </script>
-    <script>
-      //Expandir browser
-      $("#expand-upload").on("click", function () {
-        var uploadLabel = $("#upload-label");
-        var uploadInput = $("#manual-audio-upload");
-        $(this).toggleClass("expanded"); // Alterna la clase para girar la flecha
+  <footer>
+    <p>
+      <span id="currentYear"></span>
+      ® Prevaler C.A.
+    </p>
+  </footer>
+  <script>
+    var currentYearElement = document.getElementById("currentYear"),
+      currentYear = new Date().getFullYear();
+    currentYearElement.textContent = currentYear;
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const players = Array.from(document.querySelectorAll(".js-plyr")).map(
+        (p) => new Plyr(p)
+      );
+    });
+  </script>
+  <script>
+    //Expandir browser
+    $("#expand-upload").on("click", function () {
+      var uploadLabel = $("#upload-label");
+      var uploadInput = $("#manual-audio-upload");
+      $(this).toggleClass("expanded"); // Alterna la clase para girar la flecha
 
-        if (uploadLabel.is(":visible")) {
-          uploadLabel.slideUp(); // Si está visible, ocúltalo suavemente
-          uploadInput.slideUp();
-        } else {
-          uploadLabel.slideDown(); // Si está oculto, muéstralo suavemente
-          uploadInput.slideDown();
-        }
-      });
-    </script>
-  </body>
+      if (uploadLabel.is(":visible")) {
+        uploadLabel.slideUp(); // Si está visible, ocúltalo suavemente
+        uploadInput.slideUp();
+      } else {
+        uploadLabel.slideDown(); // Si está oculto, muéstralo suavemente
+        uploadInput.slideDown();
+      }
+    });
+  </script>
+</body>
+
 </html>

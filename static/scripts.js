@@ -460,9 +460,15 @@ document.getElementById("lista2").addEventListener("change", function () {
           document.querySelector(
             "#info-seleccion #label_fecha_informado"
           ).style.display = "block";
+
+          moment.locale("es");
+          var fecha = new Date(data[1]);
+          var fechaFormateada = moment
+            .utc(fecha)
+            .format("dddd, DD MMMM YYYY, hh:mm:ss A");
           document.querySelector(
             "#info-seleccion #fecha_informado"
-          ).textContent = data[1];
+          ).textContent = fechaFormateada;
 
           // Muestra el enlace al estudio y actualiza el atributo href con la ubicación del estudio
           document.querySelector("#label_estudio_link").style.display = "block";

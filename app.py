@@ -916,20 +916,23 @@ def approve_study():
                     (complete_destination_path, estudio_id),
                 )
 
+                # Establecer el idioma a español
+                cursor.execute("SET lc_time_names = 'es_ES'")
+
                 # Actualizar medico_informante, estudio_informado y fecha_informado
                 cursor.execute(
                     """
                     UPDATE cola_tipo 
                     SET medico_informante = %s, 
                         estudio_informado = 1, 
-                        fecha_informado = NOW(),
+                        fecha_informado = DATE_FORMAT(NOW(), '%%W, %%d %%M %%Y %%r'),
                         hallazgos = %s,
                         conclusion = %s
                     WHERE estudio_id = %s
                     """,
                     (doctor, hallazgos, conclusion, estudio_id),
                 )
-        db.commit()  # Confirmar los cambios en la base de datos
+            db.commit()  # Confirmar los cambios en la base de datos
         print(
             "-----------------------------------Estudio aprobado y PDF copiado con éxito.----------------------------------"
         )
