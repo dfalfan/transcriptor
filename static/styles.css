@@ -247,10 +247,7 @@ form {
   color: white;
 }
 
-#lista1 option,
-#lista2 option {
-  padding: 3px 0;
-}
+
 
 .form-columns {
   display: flex;
@@ -334,6 +331,11 @@ form {
 #lista1 option.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+#lista1 option,
+#lista2 option {
+  padding: 3px 0;
 }
 
 #lista2,
