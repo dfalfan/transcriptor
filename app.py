@@ -545,8 +545,8 @@ def download():
     )
     
     #Fuentes
-    pdfmetrics.registerFont(TTFont('Lato', 'static/fonts/Lato-Regular.ttf'))
-    pdfmetrics.registerFont(TTFont('Lato-Bold', 'static/fonts/Lato-Bold.ttf')) 
+    pdfmetrics.registerFont(TTFont('SNPro', 'static/fonts/SNPro-Regular.ttf'))
+    pdfmetrics.registerFont(TTFont('SNPro-Bold', 'static/fonts/SNPro-Bold.ttf')) 
 
     # Agregar metadatos al PDF
     c.setAuthor(doctor)
@@ -597,70 +597,70 @@ def download():
     # Asumiendo que ya has creado el objeto textobject y has establecido su posición inicial
 
     # Establecer la fuente normal para el texto
-    textobject.setFont("Lato", 9)
+    textobject.setFont("SNPro", 9)
 
   
     # Repetir para cada línea que necesites
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Fecha: ")
-    textobject.setFont("Lato", 9)
+    textobject.setFont("SNPro", 9)
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(fecha)
 
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Paciente: ")
-    textobject.setFont("Lato", 9)
+    textobject.setFont("SNPro", 9)
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(paciente)
 
-    textobject.setFont("Lato-Bold", 10)  
+    textobject.setFont("SNPro-Bold", 10)  
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Edad: ")  
-    textobject.setFont("Lato", 9)  
+    textobject.setFont("SNPro", 9)  
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(edad)  
     
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Cédula: ")
-    textobject.setFont("Lato", 9)
+    textobject.setFont("SNPro", 9)
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(cedula)
 
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Estudio: (")
-    textobject.setFont("Lato-Bold", 9)
+    textobject.setFont("SNPro-Bold", 9)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut(tipo_estudio)
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut(")")
     textobject.textLine("")  # Finalizar la línea
 
-    textobject.setFont("Lato-Bold", 10)
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Médico Informante: ")
-    textobject.setFont("Lato", 9)
+    textobject.setFont("SNPro", 9)
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(doctor)
 
     if refiere.strip():
-        textobject.setFont("Lato-Bold", 10)
+        textobject.setFont("SNPro-Bold", 10)
         textobject.setFillColorRGB(r, g, b)
         textobject.textOut("Refiere: ")
-        textobject.setFont("Lato", 9)
+        textobject.setFont("SNPro", 9)
         textobject.setFillColorRGB(r, g, b)
         textobject.textLine(refiere)
 
     # Agregar el tipo de estudio como título en el centro
-    c.setFont("Lato-Bold", 14)
+    c.setFont("SNPro-Bold", 14)
     textobject.setFillColorRGB(r, g, b)
     title_text = "Informe"  
     #title_text = "" + tipo_estudio
-    title_width = stringWidth(title_text, "Lato-Bold", 14)
+    title_width = stringWidth(title_text, "SNPro-Bold", 14)
     title_x = letter[0] / 2
     title_y = 610
     c.drawCentredString(title_x, title_y, title_text)
@@ -677,14 +677,14 @@ def download():
     y = 580  # Inicializar y
     textobject.setTextOrigin(50, y)  # Ajusta la posición según tus necesidades
     textobject.setFont(
-        "Lato", 11
+        "SNPro", 11
     )  # Ajusta el tamaño de la fuente según tus necesidades
     textobject.setFillColorRGB(r, g, b)
 
     # Divide el header_text en palabras y agrega cada palabra al textobject
     for word in header_text.split():
         if (
-            textobject.getX() + stringWidth(word, "Lato", 12) > letter[0] - 50
+            textobject.getX() + stringWidth(word, "SNPro", 12) > letter[0] - 50
         ):  # Comprobar si la palabra se sale del margen derecho
             y -= 14  # Mover el cursor a la siguiente línea
             textobject.setTextOrigin(50, y)
@@ -700,7 +700,7 @@ def download():
     textobject.setTextOrigin(50, y)
 
     # Establecer el tamaño del texto
-    textobject.setFont("Lato", 11)
+    textobject.setFont("SNPro", 11)
     textobject.setFillColorRGB(r, g, b)
 
     # Agregar el texto editado y filtrado
@@ -709,7 +709,7 @@ def download():
         words = line.split()
         for word in words:
             if (
-                textobject.getX() + stringWidth(word, "Lato", 12) > letter[0] - 50
+                textobject.getX() + stringWidth(word, "SNPro", 12) > letter[0] - 50
             ):  # Comprobar si la palabra se sale del margen derecho
                 y -= 14  # Mover el cursor a la siguiente línea
                 textobject.setTextOrigin(50, y)

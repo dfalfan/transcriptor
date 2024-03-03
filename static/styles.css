@@ -1,8 +1,20 @@
+
+@font-face {
+    font-family: 'Courier Regular';
+    src: url('/static/fonts/CourierPrime-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Courier Bold';
+    src: url('/static/fonts/CourierPrime-Bold.ttf') format('truetype');
+}
+
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #d9d9d9;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d9d9d9;
 }
 
 #doctor:focus {
@@ -218,6 +230,7 @@ textarea:-ms-input-placeholder {
 
 h1 {
   color: #e96203;
+  font-family: 'SNPro Bold', sans-serif;
   font-size: 28px;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -439,6 +452,7 @@ form {
   width: 851px !important;
   top: 52px;
   scrollbar-color: #e96203 #f8f8f8;
+  font-family: 'Courier Regular', monospace;
 }
 
 textarea {
@@ -469,6 +483,7 @@ textarea {
   height: 507px !important;
   top: 43px;
   scrollbar-color: #e96203 #f8f8f8;
+  font-family: 'Courier Regular', monospace;
 }
 
 #loading-container {
