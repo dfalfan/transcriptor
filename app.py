@@ -293,17 +293,17 @@ def transcribe():
         prompt = [
             {
                 "role": "user",
-                "content": "Esto es una transcripción de un audio dictada por un médico radiólogo. La transcripción está realizada por Whisper, pero requiere edición como si el doctor estuviera dictando a una persona para transcribir. Corrige la ortografía y sustituye palabras incorrectas. Elimina todas las indicaciones del doctor al transcriptor y cualquier interacción humana. Corrige errores gramaticales de Whisper. Mantén fielmente todos los diagnósticos y el orden en que se presentan sin omitir ni inventar información, ya que es un informe médico. Respeta todas las medidas dadas (ejemplo: 0.5x0.6 cm). El texto siempre debe comenzar por Hallazgos, omite el nombre el tipo de estudio etc. El formato es así \n\nHallazgos:\n- Descripción de hallazgos en formato de lista con viñetas.\n\nConclusión:\nCada punto de la conclusión debe comenzar en una nueva línea y NO debe ser precedido por viñetas. Por ejemplo:\nObservación1.\nObservación2.\nObservación3.\n\nRecomendaciones:\nSi no hay recomendaciones, no incluir esta sección. Evita agregar comentarios tuyos y asegúrate de que las conclusiones no estén en formato de viñetas. Los BI-RADS siempre serán en números romanos (ejemplo Bi-Rads II)",
+                "content": "Transcribe y edita el audio de un radiólogo, manteniendo la precisión médica. Corrige ortografía y gramática. Elimina indicaciones al transcriptor y errores de Whisper. Respeta la puntuación original. Formato: \n\nHallazgos:\n- Lista con viñetas.\n\nConclusión:\nObservaciones en líneas separadas, sin viñetas.\n\nOmite recomendaciones si no las hay. Si se dicta 'nueva linea' siempre es punto y aparte, es decir se comienza en la siguiente linea, sea hallazgo o conclusión. Por otro lado, 'punto y seguido' y 'coma' SIEMPRE deben respetarse sin excepciones, es decir, continuar en la misma línea de el hallazgo o la conclusión. No añadas comentarios. Usa números romanos para BI-RADS. Distingue entre 'conclusión' y 'hallazgos' sin excepción. No coloques cosas de la conclusión en hallazgos ni viceversa. Usa 'x' para medidas (ej.: 3 cm x 6 cm). Abrevia unidades métricas (cm, mm). Conserva términos específicos (Siempre es 'LOE' no 'lesiones ocupantes de espacio'; es 'blásticas' no 'plásticas', es 'bazo' no 'vaso', es 'hilio' no 'ilio'). Si por error colocaste viñetas en la conclusión eliminalas, la conclusión no lleva viñetas (-)",
             },
             {"role": "assistant", "content": "Texto:"},
             {"role": "user", "content": full_text},
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-0125-preview",
+            model="gpt-4-turbo-preview",
             messages=prompt,
-            max_tokens=1000,
-            temperature=0.2,
+            max_tokens=2000,
+            temperature=0.1,
         )
 
         timer.stop()
@@ -415,10 +415,10 @@ def fix_text():
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-0125-preview",
+            model="gpt-4-turbo-preview",
             messages=prompt,
-            max_tokens=1000,
-            temperature=0.2,
+            max_tokens=2000,
+            temperature=0.1,
         )
 
         timer.stop()
@@ -543,10 +543,10 @@ def download():
     c = canvas.Canvas(
         os.path.join(tempfile.gettempdir(), pdf_filename), pagesize=letter
     )
-    
-    #Fuentes
-    pdfmetrics.registerFont(TTFont('SNPro', 'static/fonts/SNPro-Regular.ttf'))
-    pdfmetrics.registerFont(TTFont('SNPro-Bold', 'static/fonts/SNPro-Bold.ttf')) 
+
+    # Fuentes
+    pdfmetrics.registerFont(TTFont("SNPro", "static/fonts/SNPro-Regular.ttf"))
+    pdfmetrics.registerFont(TTFont("SNPro-Bold", "static/fonts/SNPro-Bold.ttf"))
 
     # Agregar metadatos al PDF
     c.setAuthor(doctor)
@@ -555,7 +555,7 @@ def download():
     c.setKeywords([cedula, edad, fecha, admision])
 
     # Convertir el color hexadecimal #212121 a valores RGB normalizados
-    r, g, b = 33/255.0, 33/255.0, 33/255.0
+    r, g, b = 33 / 255.0, 33 / 255.0, 33 / 255.0
 
     # Agregar la imagen de marca de agua
     marca_agua_path = "static/marcadiagua2.png"
@@ -572,16 +572,21 @@ def download():
     x = (page_width - nuevo_ancho) / 2
     y = (page_height - nuevo_alto) / 2
 
-    c.drawImage(marca_agua_path, x, y, width=nuevo_ancho, height=nuevo_alto, mask='auto')
+    c.drawImage(
+        marca_agua_path, x, y, width=nuevo_ancho, height=nuevo_alto, mask="auto"
+    )
 
     # Añadir la imagen de cabecera por encima del logo
-    cabeza = "static/cabeza1.png"  # Reemplaza esto con la ruta de tu imagen 'cabeza.png'
-    cabeza_height = 50  # Ajusta la altura de la imagen 'cabeza.png' según tus necesidades
+    cabeza = (
+        "static/cabeza1.png"  # Reemplaza esto con la ruta de tu imagen 'cabeza.png'
+    )
+    cabeza_height = (
+        50  # Ajusta la altura de la imagen 'cabeza.png' según tus necesidades
+    )
     c.drawImage(
-    cabeza, 0, 700 + cabeza_height, width=620, height=cabeza_height
+        cabeza, 0, 700 + cabeza_height, width=620, height=cabeza_height
     )  # Ajusta las coordenadas y el tamaño según tus necesidades
 
-    
     # Agregar la imagen del logo
     logo = "static/pdflogo.png"  # Reemplaza esto con la ruta de tu logo
     c.drawImage(
@@ -599,7 +604,6 @@ def download():
     # Establecer la fuente normal para el texto
     textobject.setFont("SNPro", 9)
 
-  
     # Repetir para cada línea que necesites
     textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
@@ -615,13 +619,13 @@ def download():
     textobject.setFillColorRGB(r, g, b)
     textobject.textLine(paciente)
 
-    textobject.setFont("SNPro-Bold", 10)  
+    textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
-    textobject.textOut("Edad: ")  
-    textobject.setFont("SNPro", 9)  
+    textobject.textOut("Edad: ")
+    textobject.setFont("SNPro", 9)
     textobject.setFillColorRGB(r, g, b)
-    textobject.textLine(edad)  
-    
+    textobject.textLine(edad)
+
     textobject.setFont("SNPro-Bold", 10)
     textobject.setFillColorRGB(r, g, b)
     textobject.textOut("Cédula: ")
@@ -658,8 +662,8 @@ def download():
     # Agregar el tipo de estudio como título en el centro
     c.setFont("SNPro-Bold", 14)
     textobject.setFillColorRGB(r, g, b)
-    title_text = "Informe"  
-    #title_text = "" + tipo_estudio
+    title_text = "Informe"
+    # title_text = "" + tipo_estudio
     title_width = stringWidth(title_text, "SNPro-Bold", 14)
     title_x = letter[0] / 2
     title_y = 610
@@ -726,10 +730,10 @@ def download():
         y -= 14  # Mover el cursor a la siguiente línea después de cada línea de texto
         textobject.setTextOrigin(50, y)
         first_page = False
-        
+
     # Dibujar el texto
     c.drawText(textobject)
-    
+
     # Generar la ruta de la imagen de la firma del doctor seleccionado
     firma_filename = f"{doctor}.png"
     firma_path = os.path.join("static/firmas", firma_filename)
@@ -747,7 +751,6 @@ def download():
         # c.drawImage("ruta_de_la_imagen_generica.png", 50, 50, width=160, height=50)
         pass
 
-    
     # Añadir la imagen 'piedepagina.png' debajo de la firma
     piedepagina_path = "static/piedepagina1.png"  # Asegúrate de que esta sea la ruta correcta a tu imagen
     # Ajusta el tamaño de la imagen de pie de página según tus necesidades
@@ -758,7 +761,13 @@ def download():
     # La posición Y es la posición inicial de la firma menos la altura de la firma y un pequeño margen si es necesario
     piedepagina_y = 50 - piedepagina_height - 10  # Ajusta el margen según necesites
 
-    c.drawImage(piedepagina_path, piedepagina_x, piedepagina_y, width=piedepagina_width, height=piedepagina_height)
+    c.drawImage(
+        piedepagina_path,
+        piedepagina_x,
+        piedepagina_y,
+        width=piedepagina_width,
+        height=piedepagina_height,
+    )
 
     # Agregar una nueva página al PDF
     c.showPage()
@@ -790,13 +799,19 @@ def download():
             # Calcular la posición x e y para una sola columna de imágenes
             image_x = (letter[0] - image_width) / 2  # Centrar la imagen en la página
             # Calcular la posición y en función del índice de la imagen en la página
-            image_y = page_height - margin - (images_per_page + 1) * (image_height + margin)
+            image_y = (
+                page_height - margin - (images_per_page + 1) * (image_height + margin)
+            )
 
-            c.drawImage(image_path, image_x, image_y, width=image_width, height=image_height)
+            c.drawImage(
+                image_path, image_x, image_y, width=image_width, height=image_height
+            )
 
             images_per_page += 1  # Incrementar el contador de imágenes por página
         else:
-            print(f"La imagen {image_path} no existe")  # Imprimir si la imagen no existe
+            print(
+                f"La imagen {image_path} no existe"
+            )  # Imprimir si la imagen no existe
 
     # Guardar el PDF después de procesar todas las imágenes
     c.save()
@@ -885,7 +900,7 @@ def approve_study():
     # Crear la ruta completa del archivo, incluyendo el nombre del archivo
     complete_destination_path = os.path.join(destination_path, pdf_filename)
 
-  # Crear la ruta completa del archivo, incluyendo el nombre del archivo
+    # Crear la ruta completa del archivo, incluyendo el nombre del archivo
     complete_destination_path = os.path.join(destination_path, pdf_filename)
 
     # Verificar si el archivo ya existe
