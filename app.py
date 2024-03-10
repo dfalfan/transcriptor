@@ -734,14 +734,18 @@ def download():
             ):  # Comprobar si la palabra se sale del margen derecho
                 y -= 14  # Mover el cursor a la siguiente línea
                 textobject.setTextOrigin(50, y)
+            # ...
             if y < 134:  # Comprobar si el texto se sale del margen superior
                 c.drawText(textobject)
                 c.showPage()  # Comenzar una nueva página
                 textobject = c.beginText()  # Crear un nuevo objeto textobject
+                textobject.setFont("SNPro", 11)  # Establecer la fuente y el tamaño del texto
+                textobject.setFillColorRGB(r, g, b)  # Establecer el color del texto
                 y = (
                     700 if not first_page else 580
                 )  # Comenzar desde la parte superior de la nueva página
                 textobject.setTextOrigin(50, y)
+            # ...
             textobject.textOut(word + " ")  # Agregar la palabra y un espacio
             if word in ["Hallazgos:", "Conclusión:"]:
                 textobject.setFont("SNPro", 11)  # Cambiar de nuevo a fuente normal
