@@ -128,7 +128,7 @@ def get_patient_data():
 
             # Consulta combinada con JOIN para obtener todos los datos necesarios
             query = """
-            SELECT c.paciente, c.cedula, c.edad, te.name, COALESCE(ct.detalle, '') AS detalle, ct.estudio_id
+            SELECT c.paciente, c.cedula, c.edad, te.name, COALESCE(ct.detalle, '') AS detalle, ct.estudio_id, cat.categoria
             FROM cola c
             LEFT JOIN cola_tipo ct ON c.id = ct.cola_id
             LEFT JOIN tipo_estudio te ON ct.tipo_estudio_id = te.id
@@ -224,9 +224,10 @@ def obtener_tipos_estudio(cola_ids, cursor):
 
     for cola_id in cola_ids:
         tipo_estudio_query = """
-        SELECT ct.estudio_id, te.name, COALESCE(ct.detalle, '') AS detalle
+        SELECT ct.estudio_id, te.name, COALESCE(ct.detalle, '') AS detalle, cat.categoria
         FROM cola_tipo ct  
         JOIN tipo_estudio te ON ct.tipo_estudio_id = te.id
+        LEFT JOIN categorias cat ON te.id_categoria = cat.id
         WHERE ct.cola_id = %s
         """
 
@@ -235,15 +236,15 @@ def obtener_tipos_estudio(cola_ids, cursor):
         # Consume todos los resultados
         results = cursor.fetchall()
 
-        # Concatenar nombre y detalle, y luego agregar a la lista de tipos_detalle
+        # Concatenar nombre, detalle y categoría, y luego agregar a la lista de tipos_detalle
         for row in results:
-            nombre_con_detalle = f"{row['name']} {row['detalle']}".strip()
+            nombre_con_detalle = f"{row['name']} {row['detalle']} {row['categoria']}".strip()
             tipos_detalle.append(nombre_con_detalle)
+            print(f"Estudio: {row['name']}, Detalle: {row['detalle']}, Categoria: {row['categoria']}")
 
     # Unir todos los tipos en una cadena separada por comas
     tipos = ", ".join(tipos_detalle)
     return tipos
-
 
 @app.route("/save-selected-data", methods=["POST"])
 def save_selected_data():
@@ -513,8 +514,21 @@ def download():
     fecha = request.form["fecha"]
     admision = request.form["admision"]
     doctor = request.form["doctor"]
-
     session["doctor"] = doctor  # Guardar doctor en la sesión
+
+    # Crear la variable 'area' basada en 'tipo_estudio'
+    if tipo_estudio.startswith("TAC "):
+        area = "Tomografía"
+    elif tipo_estudio.startswith("RMN"):
+        area = "Resonancia"
+    elif tipo_estudio.startswith("ECO"):
+        area = "Ecografía"
+    elif tipo_estudio.startswith("RX MAMOGRAFIA"):
+        area = "Mamografía"
+    elif tipo_estudio.startswith("RX"):
+        area = "Rayos X"
+    else:
+        area = ""
 
     print(f"paciente: {paciente}")
     print(f"tipo_estudio: {tipo_estudio}")
@@ -523,6 +537,7 @@ def download():
     print(f"cedula: {cedula}")
     print(f"doctor: {doctor}")
     print(f"refiere: {refiere}")
+    print(f"area: {area}")
 
     # Generar un nombre de archivo temporal único
     transcription_filename = f"{admision}_{cedula}_{paciente}_{tipo_estudio}_{fecha}_"
@@ -662,8 +677,7 @@ def download():
     # Agregar el tipo de estudio como título en el centro
     c.setFont("SNPro-Bold", 14)
     textobject.setFillColorRGB(r, g, b)
-    title_text = "Informe"
-    # title_text = "" + tipo_estudio
+    title_text = "Informe de " + area
     title_width = stringWidth(title_text, "SNPro-Bold", 14)
     title_x = letter[0] / 2
     title_y = 610
@@ -675,6 +689,7 @@ def download():
     )
     # Dibujar el texto
     c.drawText(textobject)
+
 
     # Agregar el texto del ENCABEZADO
     textobject = c.beginText()
