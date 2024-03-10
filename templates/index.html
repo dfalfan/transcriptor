@@ -181,7 +181,7 @@
             </div>
             <div id="expand-upload-container">
               <i id="expand-upload" class="fas fa-chevron-circle-down"></i>
-            </div> 
+            </div>
             <form action="/transcribe" method="post" enctype="multipart/form-data" id="transcription-form"
               class="transcription-form">
               <label for="manual-audio-upload" id="upload-label" style="display: none">
@@ -219,7 +219,7 @@
 
         <div id="transcription-header-container" <div id="transcription-header">
           <div id="transcription-header-content">
-            <div id="transcription-header-text">
+            <div id="transcription-header-text" style="z-index: 1 !important; position: sticky;">
               <textarea id="header_text" name="header_text"></textarea>
             </div>
           </div>
@@ -229,7 +229,7 @@
           <div class="transcription-content">
             <div class="player" id="textarea-container">
               <textarea id="filtered_text" name="filtered_text"></textarea>
-              <div class="input-field">
+              <div class="input-field" style="height: 1px;">
                 <input type="text" id="refiere" name="refiere" placeholder="Refiere"
                   style="margin-top: 40px; margin-left: 55px" />
               </div>
