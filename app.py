@@ -712,6 +712,8 @@ def download():
     for line in edited_filtered_text.split("\n"):
         words = line.split()
         for word in words:
+            if word in ["Hallazgos:", "Conclusión:"]:
+                textobject.setFont("SNPro-Bold", 11)  # Cambiar a fuente en negrita
             if (
                 textobject.getX() + stringWidth(word, "SNPro", 12) > letter[0] - 50
             ):  # Comprobar si la palabra se sale del margen derecho
@@ -726,6 +728,8 @@ def download():
                 )  # Comenzar desde la parte superior de la nueva página
                 textobject.setTextOrigin(50, y)
             textobject.textOut(word + " ")  # Agregar la palabra y un espacio
+            if word in ["Hallazgos:", "Conclusión:"]:
+                textobject.setFont("SNPro", 11)  # Cambiar de nuevo a fuente normal
         textobject.textOut(" ")  # Agregar un espacio en blanco al final de la línea
         y -= 14  # Mover el cursor a la siguiente línea después de cada línea de texto
         textobject.setTextOrigin(50, y)
