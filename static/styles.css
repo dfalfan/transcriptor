@@ -507,6 +507,7 @@ textarea {
 #loading-gif {
   width: 150px;
   height: 300px;
+  margin-top: 170px !important
 }
 
 footer {
