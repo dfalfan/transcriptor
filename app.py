@@ -294,14 +294,14 @@ def transcribe():
         prompt = [
             {
                 "role": "user",
-                "content": "Transcribe y edita el audio de un radiólogo, manteniendo la precisión médica. Corrige ortografía y gramática. Elimina indicaciones al transcriptor y errores de Whisper. Respeta la puntuación original. Omite el encabezado si se dicta (paciente, edad etc). Formato: \n\nHallazgos:\nObservaciones en líneas separadas.\n\nConclusión:\nObservaciones en líneas separadas\n\nOmite recomendaciones si no las hay. Si se dicta 'nueva linea' siempre se debe seguir el texto en una nueva línea, es decir es punto y aparte. Por otro lado, 'punto y seguido' y 'coma' SIEMPRE deben respetarse sin excepciones, es decir, continuar en la misma línea. Hay una doctora que dicta solo 'punto', significa punto y aparte. No añadas comentarios tuyos. Usa números romanos para BI-RADS. Distingue entre 'conclusión' y 'hallazgos' sin excepción. No coloques cosas de la conclusión en hallazgos ni viceversa. Usa 'x' para medidas (ej.: 3 cm x 6 cm). Siempre abrevia unidades métricas (cm, mm). Corrige términos específicos (Siempre es 'LOE' no 'lesiones ocupantes de espacio'; es 'blásticas' no 'plásticas', es 'bazo' no 'vaso', es 'hilio' no 'ilio'). No debe haber lineas en blanco entre las lineas. excepto para separar los hallazgos de las conclusiones.",
+                "content": "Transcribe y edita el audio de un radiólogo, manteniendo la precisión médica. Corrige ortografía y gramática. Elimina indicaciones al transcriptor y errores de Whisper. Respeta la puntuación original. Omite el encabezado si se dicta (paciente, edad etc). Formato: \n\nHallazgos:\nObservaciones en líneas separadas.\n\nConclusión:\nObservaciones en líneas separadas\n\nOmite recomendaciones si no las hay. Intenta crear las nuevas lineas segun tu criterio PERO la opinión del doctor es prioridad. Si se dicta 'nueva linea' siempre se debe seguir el texto en una nueva línea, es decir es punto y aparte. Por otro lado, 'punto y seguido' y 'coma' SIEMPRE deben respetarse sin excepciones, es decir, continuar en la misma línea. Hay una doctora que dicta solo 'punto', significa punto y aparte. No añadas comentarios tuyos. Usa números romanos para BI-RADS. Distingue entre 'conclusión' y 'hallazgos' sin excepción. No coloques cosas de la conclusión en hallazgos ni viceversa. Usa 'x' para medidas (ej.: 3 cm x 6 cm). Siempre abrevia unidades métricas (cm, mm). Corrige términos específicos (Siempre es 'LOE' no 'lesiones ocupantes de espacio'; es 'blásticas' no 'plásticas', es 'bazo' no 'vaso', es 'hilio' no 'ilio'). No debe haber lineas en blanco entre las lineas. excepto para separar los hallazgos de las conclusiones.",
             },
             {"role": "assistant", "content": "Texto:"},
             {"role": "user", "content": full_text},
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-turbo-preview",
+            model="gpt-4-turbo",
             messages=prompt,
             max_tokens=2000,
             temperature=0.1,
@@ -416,7 +416,7 @@ def fix_text():
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-turbo-preview",
+            model="gpt-4-turbo",
             messages=prompt,
             max_tokens=2000,
             temperature=0.1,
