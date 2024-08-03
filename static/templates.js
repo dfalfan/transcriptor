@@ -187,8 +187,8 @@ var templatesByDoctor = {
     // Añade más plantillas aquí para la Dra Yeniree Alvarez si son necesarios
   ],
   // Plantillas para otros doctores...
-  "Dra Lilian Caraballosa": [
-    // Plantillas para la Dra Lilian Caraballosa...
+  "Dra Lilian Carballosa": [
+    // Plantillas para la Dra Lilian Carballosa...
     {
       titulo: "AngioRM Cerebral",
       texto:

@@ -301,9 +301,9 @@ def transcribe():
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             messages=prompt,
-            max_tokens=2000,
+            max_tokens=4000,
             temperature=0.1,
         )
 
@@ -416,9 +416,9 @@ def fix_text():
         ]
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             messages=prompt,
-            max_tokens=2000,
+            max_tokens=4000,
             temperature=0.1,
         )
 
@@ -483,7 +483,6 @@ def upload_image():
     print(f"Nombre del archivo de imagen: {filename}")
 
     return filename, 200
-
 
 @app.route("/clear_session", methods=["POST"])
 def clear_session():

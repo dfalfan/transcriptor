@@ -218,7 +218,7 @@ var headersByDoctor = {
   "Dra Yeniree Alvarez": [
     // Añade más encabezados aquí para la Dra Yeniree Alvarez si son necesarios
   ],
-  "Dra Lilian Caraballosa": [
+  "Dra Lilian Carballosa": [
     {
       titulo: "AngioRM Cerebral",
       texto:

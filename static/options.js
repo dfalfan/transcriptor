@@ -13,7 +13,7 @@ var opcionesTecnico = [
 var opcionesDoctor = [
   "Dra Adriana Acosta",
   "Dra Yeniree Alvarez",
-  "Dra Lilian Caraballosa",
+  "Dra Lilian Carballosa",
   "Dr Hildebrando Douaihi",
   "Dra Lisbeth Romero",
   "Dra Ane Lise Shanoswki",
@@ -22,7 +22,7 @@ var opcionesDoctor = [
 var paginasPorDoctor = {
   "Dra Adriana Acosta": 2,
   "Dra Yeniree Alvarez": 2,
-  "Dra Lilian Caraballosa": 2,
+  "Dra Lilian Carballosa": 2,
   "Dr Hildebrando Douaihi": 2,
   "Dra Lisbeth Romero": 2,
   "Dra Ane Lise Shanoswki": 2,
